@@ -29,18 +29,14 @@ document.addEventListener("DOMContentLoaded", () => {
       })
     }
     else if(e.target.matches(".release")){
-      // console.log(e.target.dataset.pokemonId)
       pokemonId = e.target.dataset.pokemonId;
-
       const deleteOptions = {
         method: "DELETE"
       }
-
       fetch(`${BASE_URL}/pokemons/${pokemonId}`, deleteOptions)
       .then(response => response.json())
       .then(_data => {
         e.target.parentElement.remove()
-
       })
     }
   })
@@ -57,10 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const trainersPokemon = (p) => {
     const ul = document.createElement('ul');
     for(const pokemon of p){
-      let li = document.createElement('li');
-      li.innerHTML = `
-      ${pokemon.nickname}(${pokemon.species}) <button class="release" data-pokemon-id="${pokemon.id}">Release</button>
-      `
+      let li = renderPokemon(pokemon)
       ul.append(li);
     }
     return ul;
