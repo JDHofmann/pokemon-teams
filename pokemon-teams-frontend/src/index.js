@@ -5,16 +5,58 @@ document.addEventListener("DOMContentLoaded", () => {
   const POKEMONS_URL = `${BASE_URL}/pokemons`
   
   
-  // const renderPokemon = (pokemon) => {
-  //   // console.log(pokemon)
-  //   let li = document.createElement('li');
-  //   return li;
-  // }
+  document.addEventListener('click', e => {
+    if(e.target.matches("[data-trainer-id]")){
+      const id = e.target.dataset.trainerId;
+
+      let addOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({trainer_id: id})
+      }
+
+      fetch(`${BASE_URL}/pokemons`, addOptions)
+      .then(response => response.json())
+      .then( function(pokemon){
+
+        let next = e.target.nextElementSibling
+        let newPokemon = renderPokemon(pokemon)
+        console.log(newPokemon)
+        next.append(newPokemon)
+      })
+    }
+    else if(e.target.matches(".release")){
+      // console.log(e.target.dataset.pokemonId)
+      pokemonId = e.target.dataset.pokemonId;
+
+      const deleteOptions = {
+        method: "DELETE"
+      }
+
+      fetch(`${BASE_URL}/pokemons/${pokemonId}`, deleteOptions)
+      .then(response => response.json())
+      .then(_data => {
+        e.target.parentElement.remove()
+
+      })
+    }
+  })
+
+
+  const renderPokemon = (pokemon) => {
+    let li = document.createElement('li');
+    li.innerHTML = `
+      ${pokemon.nickname}(${pokemon.species}) <button class="release" data-pokemon-id="${pokemon.id}">Release</button>
+      `
+    return li;
+  }
   
   const trainersPokemon = (p) => {
     const ul = document.createElement('ul');
     for(const pokemon of p){
-      // renderPokemon(pokemon)
       let li = document.createElement('li');
       li.innerHTML = `
       ${pokemon.nickname}(${pokemon.species}) <button class="release" data-pokemon-id="${pokemon.id}">Release</button>
